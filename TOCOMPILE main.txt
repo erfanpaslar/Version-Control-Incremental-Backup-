@@ -1,0 +1,7 @@
+To Compile main.c and headers use this:	
+gcc -o main main.c incremental.c fullBackup.c restore.c
+
+ 
+###
+main2.c is all codes without headers and easy to compile!
+###
