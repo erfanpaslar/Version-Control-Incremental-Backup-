@@ -29,80 +29,85 @@ def log():
 def clicked():
     labelLog.config(text = "")
     global text
-    fileName = enteryFileName.get()
+    fileNames = (enteryFileName.get()).split(" ")
     directoryPath = enteryDirectoryPath.get()
     version = enteryVersion.get()
     
-    if directoryPath=="":
-        directoryPath="."
-    if fileName=="":
-        labelLog.config(text = 'File name not valid')
-        print("File name not valid")
-        return
-        
-    if (selected.get()==0):#FUll Backup   ->  "main.exe <input.txt >output.txt"
-        labelLog.config(text = "Don't make full backup again")
-        text="mkdir \""+directoryPath+"\\temp\""
-        
-        os.system(text)
+   # filenames = ["a.txt", "b.txt"]
+    print(fileNames)
+    for fileName in fileNames:
+        if directoryPath=="":
+            directoryPath="."
+        if fileName=="":
+            labelLog.config(text = 'File name not valid')
+            print("File name not valid")
+            return
+            
+        if (selected.get()==0):#FUll Backup   ->  "main.exe <input.txt >output.txt"
+            labelLog.config(text = "Don't make full backup again")
+            text="mkdir \""+directoryPath+"\\temp\""
+            
+            os.system(text)
 
-        text=directoryPath+"\\temp\\input.txt"
-        print(text)
-        with open(text,"w") as input:
-            text="0\n"+fileName+"\n"+directoryPath+"\n"
-            input.write(text)
+            text=directoryPath+"\\temp\\input.txt"
+            print(text)
+            with open(text,"w") as input:
+                text="0\n"+fileName+"\n"+directoryPath+"\n"
+                input.write(text)
 
-        ####text="gcc -o main main.c incremental.c restore.c fullBackup.c"
-        #if you dont have gcc compiler just compile the 3 .c files together and put it in this dir with name of main.c4
-        #and if you dont. just dont delete the main.exe 
-        ####os.system(text)                                          
-        
-        text="main.exe <\""+directoryPath+"\\temp\\input.txt\" >\""+directoryPath+"\\temp\\output.txt\""
-        os.system(text)
+            ####text="gcc -o main main.c incremental.c restore.c fullBackup.c"
+            #if you dont have gcc compiler just compile the 3 .c files together and put it in this dir with name of main.c4
+            #and if you dont. just dont delete the main.exe 
+            ####os.system(text)                                          
+            
+            text="main.exe <\""+directoryPath+"\\temp\\input.txt\" >\""+directoryPath+"\\temp\\output.txt\""
+            os.system(text)
 
-    elif selected.get()==1:#Inc Backup
-        text="mkdir \""+directoryPath+"\\temp\""
-        os.system(text)
-
-        text=directoryPath+"\\temp\\input.txt"
-        print(text)
-        with open(text,"w") as input:
-            text="1\n"+fileName+"\n"+directoryPath+"\n"
-            input.write(text)
-
-        ####text="gcc -o main main.c incremental.c restore.c fullBackup.c"
-        #if you dont have gcc compiler just compile the 3 .c files together and put it in this dir with name of main.c4
-        #and if you dont. just dont delete the main.exe 
-        ####os.system(text) 
-        text="main.exe <\""+directoryPath+"\\temp\\input.txt\" >\""+directoryPath+"\\temp\\output.txt\""
-        os.system(text)
-
-    elif selected.get()==2:#restore
-        try:
-            version=int(version)
+        elif selected.get()==1:#Inc Backup
             text="mkdir \""+directoryPath+"\\temp\""
             os.system(text)
 
             text=directoryPath+"\\temp\\input.txt"
+            print(text)
             with open(text,"w") as input:
-                text="2\n"+fileName+"\n"+directoryPath+"\n"+str(version)+"\n"
+                text="1\n"+fileName+"\n"+directoryPath+"\n"
                 input.write(text)
-            
+
             ####text="gcc -o main main.c incremental.c restore.c fullBackup.c"
             #if you dont have gcc compiler just compile the 3 .c files together and put it in this dir with name of main.c4
-            #you can just compile main2.txt and put it in this directory as main.c TOO.
             #and if you dont. just dont delete the main.exe 
             ####os.system(text) 
             text="main.exe <\""+directoryPath+"\\temp\\input.txt\" >\""+directoryPath+"\\temp\\output.txt\""
             os.system(text)
-        except ValueError:
-            print("Version Not Valid")
-            labelLog.config(text = 'Version Not Valid')
+        
+        elif selected.get() == 2:  #restore
+            print("in")
+            try:
+                version=int(version)
+                text="mkdir \""+directoryPath+"\\temp\""
+                os.system(text)
 
-    if checked.get()==1:
-        text = "del \""+directoryPath+"\\temp\\*\""
-        os.system(text)
-        labelLog.config(text = 'Temp deleted!')
+                text=directoryPath+"\\temp\\input.txt"
+                with open(text,"w") as input:
+                    text="2\n"+fileName+"\n"+directoryPath+"\n"+str(version)+"\n"
+                    input.write(text)
+                
+                ####text="gcc -o main main.c incremental.c restore.c fullBackup.c"
+                #if you dont have gcc compiler just compile the 3 .c files together and put it in this dir with name of main.c4
+                #you can just compile main2.txt and put it in this directory as main.c TOO.
+                #and if you dont. just dont delete the main.exe 
+                ####os.system(text) 
+                text="main.exe <\""+directoryPath+"\\temp\\input.txt\" >\""+directoryPath+"\\temp\\output.txt\""
+                print(text)
+                os.system(text)
+            except ValueError:
+                print("Version Not Valid")
+                labelLog.config(text = 'Version Not Valid')
+
+        if checked.get()==1:
+            text = "del \""+directoryPath+"\\temp\\*\""
+            os.system(text)
+            labelLog.config(text = 'Temp deleted!')
     
        
 checkBoxTempDel = Checkbutton(window, text='Delete temporary files ( needs a confomation! )', variable=checked)

@@ -19,7 +19,7 @@ int isFileNameExists(struct Array2d direc, char filenameToRE[]);
 char *getFileExtention(char *filename);
 char *getfileNameWithoutExtention(char *fileName);//should i declear it twice??
 
-struct Array2d gettingAllVersionOfFile(char *fileNameWithoutExtention, char *pathToGetSubdirectories);
+struct Array2d gettingAllVersionOfFile(char *fileNameWithoutExtention, char *pathToGetSubdirectories, char fileName[]);
 void restore(char *fileNewName, char *dirPath, int version);
 char *getfileNameWithoutExtention(char *fileName);//should i declear it twice??
 char *getFileExtention(char *filename);
@@ -410,7 +410,7 @@ void restore(char *fileNewName, char *dirPath, int version){
     char stringLines[MAX_NAME_LENGTH+1];
     int  lineNumber = 0;
 
-    struct Array2d allVersions = gettingAllVersionOfFile(fileNameWithoutExtention, dirPath);
+    struct Array2d allVersions = gettingAllVersionOfFile(fileNameWithoutExtention, dirPath, fileNameWithoutExtention);
     int lastVersion = allVersions.lines-1;
     //for example our last version is '6'. we want version '4' \
      |_> first we should extract filename6.cab(inc6.txt) \
@@ -501,7 +501,7 @@ void restore(char *fileNewName, char *dirPath, int version){
  * @return       directories       : the same name directories in a 2d array .       
  */ 
 
-struct Array2d gettingAllVersionOfFile(char *fileNameWithoutExtention,char *pathToGetSubdirectories){
+struct Array2d gettingAllVersionOfFile(char *fileNameWithoutExtention,char *pathToGetSubdirectories, char fileName[]){
     struct dirent *de;
     struct Array2d directories;
     directories.lines = 0;
@@ -522,15 +522,25 @@ struct Array2d gettingAllVersionOfFile(char *fileNameWithoutExtention,char *path
 
             if(isStrInStr(de->d_name, cab)){
 
-                printf("%s\n", de->d_name);
-                strcpy(directories.array[directories.lines], de->d_name);
-                directories.lines++;
-
+                
+                if (isStrInStr(de->d_name, fileName)){
+                    printf("%s\n", de->d_name);
+                    strcpy(directories.array[directories.lines], de->d_name);
+                    directories.lines++;
+                }
+                
             }
         }
     }
+    // int counter = 0;
+    // for (int i = 0;i<directories.lines;i++){
 
-	closedir(dr);
+
+    //     counter++;
+    // }
+
+    // directories.lines = counter + 1;
+    closedir(dr);
     return directories;
 
 }
